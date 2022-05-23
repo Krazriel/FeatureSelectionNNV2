@@ -107,6 +107,18 @@ def main():
         else:
             print('Invalid Input: must be forward or backward')
 
+    elif userChoice == 'custom':
+        customDataSet = np.loadtxt('data/zoo_new.txt', delimiter=',')
+        customDataLabel = customDataSet[:, 0]
+        algorithmChoice = input('Enter forward, backward: ')
+
+        if algorithmChoice == 'forward':
+            forwardSelection(customDataSet, customDataLabel)
+        elif algorithmChoice == 'backward':
+            backwardElimination(customDataSet, customDataLabel)
+        else:
+            print('Invalid Input: must be forward or backward')
+
     else:
         print('Invalid Input: must be small, large, or custom')
 
