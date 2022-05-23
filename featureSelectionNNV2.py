@@ -108,7 +108,7 @@ def main():
             print('Invalid Input: must be forward or backward')
 
     elif userChoice == 'custom':
-        customDataSet = np.loadtxt('data/zoo_new.txt', delimiter=',')
+        customDataSet = np.loadtxt('data/bodyPerformance_new.txt', delimiter=',')
         customDataLabel = customDataSet[:, 0]
         algorithmChoice = input('Enter forward, backward: ')
 
