@@ -2,13 +2,6 @@ import numpy as np
 import collections as co
 import copy as cp
 
-#Set up data, features and labels sets
-smallDataSet = np.loadtxt('data/CS205_SP_2022_SMALLtestdata__38.txt')
-largeDataSet = np.loadtxt('data/CS205_SP_2022_Largetestdata__3.txt')
-
-smallDataLabels = smallDataSet[:, 0]
-largeDataLabels = largeDataSet[:, 0]
-
 #Nearest Neighbors Classifier
 def nearestNeighbors(target, data, labels):
     nearestDist = float('inf')
@@ -34,7 +27,7 @@ def crossValidation(data, labels):
 #Forward Selection
 def forwardSelection(data, labels):
     defaultRate = 100 * co.Counter(labels).get(max(co.Counter(labels))) / len(labels)
-    print('Using Features :  D  : accuracy = {:0.1f}%'.format(defaultRate))
+    print('Using Features :  []  : accuracy = {:0.1f}%'.format(defaultRate))
     featureList = []
 
     while(len(featureList) != len(data[0]) - 1):
@@ -73,6 +66,10 @@ def backwardElimination(data, labels):
         for i in featureList:
             featureTemp = cp.copy(featureList)
             featureTemp.remove(i)
+            if len(featureTemp) == 0:
+                print('Eliminating Features : ', i  ,': accuracy = {:0.1f}%'.format(defaultRate))
+                print('Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(defaultRate))
+                return
             feature = data[:, featureTemp]
             result = 100 * crossValidation(feature, labels)
             if result > bestAccuracy:
@@ -82,5 +79,37 @@ def backwardElimination(data, labels):
             print('Eliminating Features : ', i , ' : accuracy = {:0.1f}%'.format(result))
         print('Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(bestAccuracy))
         featureList.remove(bestFeature)
+    
 
-backwardElimination(smallDataSet, smallDataLabels)
+def main():
+    userChoice = input('Enter small, large, custom: ')
+    if userChoice == 'small':
+        smallDataSet = np.loadtxt('data/CS205_SP_2022_SMALLtestdata__38.txt')
+        smallDataLabels = smallDataSet[:, 0]
+        algorithmChoice = input('Enter forward, backward: ')
+
+        if algorithmChoice == 'forward':
+            forwardSelection(smallDataSet, smallDataLabels)
+        elif algorithmChoice == 'backward':
+            backwardElimination(smallDataSet, smallDataLabels)
+        else:
+            print('Invalid Input: must be forward or backward')
+
+    elif userChoice == 'large':
+        largeDataSet = np.loadtxt('data/CS205_SP_2022_Largetestdata__3.txt')
+        largeDataLabels = largeDataSet[:, 0]
+        algorithmChoice = input('Enter forward, backward: ')
+
+        if algorithmChoice == 'forward':
+            forwardSelection(largeDataSet, largeDataLabels)
+        elif algorithmChoice == 'backward':
+            backwardElimination(largeDataSet, largeDataLabels)
+        else:
+            print('Invalid Input: must be forward or backward')
+
+    else:
+        print('Invalid Input: must be small, large, or custom')
+
+
+if __name__ == "__main__":
+    main()
