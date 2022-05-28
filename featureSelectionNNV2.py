@@ -27,10 +27,12 @@ def crossValidation(data, labels):
 #Forward Selection
 def forwardSelection(data, labels):
     defaultRate = 100 * co.Counter(labels).get(max(co.Counter(labels))) / len(labels)
-    print('Using Features :  []  : accuracy = {:0.1f}%'.format(defaultRate))
+    level = 0
+    print('[ LEVEL' , level ,'] : Initial Features :  []  : accuracy = {:0.1f}%'.format(defaultRate))
     featureList = []
 
     while(len(featureList) != len(data[0]) - 1):
+        level += 1
         bestAccuracy = 0
         bestFeature = 0
         bestSet = []
@@ -48,18 +50,20 @@ def forwardSelection(data, labels):
                 bestFeature = i
                 bestSet = featureTemp
             print('Using Features : ', i , ' : accuracy = {:0.1f}%'.format(result))
-        print('Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(bestAccuracy))
+        print('[ LEVEL' , level ,'] Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(bestAccuracy))
         featureList.append(bestFeature)
 
 #Backward Elimination
 def backwardElimination(data, labels):
+    level = 0
     defaultRate = 100 * co.Counter(labels).get(max(co.Counter(labels))) / len(labels)
     featureList = np.arange(1, len(data[0]))
     featureList = featureList.tolist()
     feature = data[:, featureList]
     result = 100 * crossValidation(feature, labels)
-    print('Using Features :', featureList ,': accuracy = {:0.1f}%'.format(result))
+    print('[ LEVEL' , level ,'] : Initial Features :', featureList ,': accuracy = {:0.1f}%'.format(result))
     while len(featureList) != 0:
+        level += 1
         bestAccuracy = 0
         bestFeature = 0
         bestSet = []
@@ -68,7 +72,7 @@ def backwardElimination(data, labels):
             featureTemp.remove(i)
             if len(featureTemp) == 0:
                 print('Eliminating Features : ', i  ,': accuracy = {:0.1f}%'.format(defaultRate))
-                print('Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(defaultRate))
+                print('[ LEVEL' , level ,'] : Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(defaultRate))
                 return
             feature = data[:, featureTemp]
             result = 100 * crossValidation(feature, labels)
@@ -77,7 +81,7 @@ def backwardElimination(data, labels):
                 bestFeature = i
                 bestSet = featureTemp
             print('Eliminating Features : ', i , ' : accuracy = {:0.1f}%'.format(result))
-        print('Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(bestAccuracy))
+        print('[ LEVEL' , level ,'] : Feature set ', bestSet, ' was best : accuracy = {:0.1f}%'.format(bestAccuracy))
         featureList.remove(bestFeature)
     
 
